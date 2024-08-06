@@ -1,3 +1,4 @@
+using CloudCustomer.API.Config;
 using CloudCustomer.API.Services;
 
 namespace CloudCustomer.API
@@ -11,7 +12,7 @@ namespace CloudCustomer.API
             // Add services to the container.
 
             builder.Services.AddControllers();
-            ConfigureServices(builder.Services);
+            ConfigureServices(builder.Services, builder.Configuration);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -34,8 +35,9 @@ namespace CloudCustomer.API
 
             app.Run();
         }
-       static void ConfigureServices(IServiceCollection services)
+       static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<UsersApiOptions>(configuration.GetSection("UsersApiOptions"));
             services.AddTransient<IUsersService, UsersService>();
             services.AddHttpClient<IUsersService, UsersService>(); // indicate that userservice should get http client
         }
